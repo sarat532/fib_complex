@@ -19,3 +19,14 @@ after_success:
   - docker push saratkota/fib_nginx
   - docker push saratkota/fib_server
   - docker push saratkota/fib_worker
+deploy:
+  provider: elasticbeanstalk
+  region: 'ap-south-1'
+  app: 'Multi-Docker'
+  env: 'Multidocker-env-1'
+  bucket_name: 'elasticbeanstalk-ap-south-1-671959627236'
+  bucket_path: 'docker-multi'
+  on:
+    branch: master
+  access_key_id: $AWS_ACCESS_KEY
+  secret_access_key: $AWS_SECRET_KEY
