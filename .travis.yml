@@ -1,0 +1,21 @@
+sudo: required
+services:
+  - docker
+
+before_install:
+  - docker build -t saratkota/fib_test -f ./client/Dockerfile.dev ./client
+
+script:
+  - docker run -e CI=true saratkota/fib_test npm test
+
+after_success:
+  - docker build -t saratkota/fib_client ./client
+  - docker build -t saratkota/fib_nginx ./nginx
+  - docker build -t saratkota/fib_server ./server
+  - docker build -t saratkota/fib_worker ./worker
+  # Log in to Docker CLI and push images
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+  - docker push saratkota/fib_client
+  - docker push saratkota/fib_nginx
+  - docker push saratkota/fib_server
+  - docker push saratkota/fib_worker
